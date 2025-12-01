@@ -45,7 +45,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
   };
 
   return (
-    <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+    <div className="rounded-sm border border-stroke bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
         <h3 className="font-medium text-black dark:text-white">
           {isEditing ? 'Edit Product' : 'Add New Product'}
@@ -62,7 +62,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
               required
             />
           </div>
@@ -76,7 +76,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
             />
           </div>
 
@@ -90,7 +90,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
                 step="0.01"
                 required
               />
@@ -104,7 +104,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
                 name="stock"
                 value={formData.stock}
                 onChange={handleChange}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
                 required
               />
             </div>
@@ -119,7 +119,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="store"
               value={formData.store}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
               required
             />
           </div>
@@ -133,7 +133,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="image"
               value={formData.image}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
               required
             />
           </div>
@@ -147,14 +147,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               value={formData.description || ''}
               onChange={handleChange}
               rows={4}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:focus:border-primary"
+              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
             ></textarea>
           </div>
 
           <div className="flex justify-end gap-4.5">
             <button
               type="button"
-              className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
+              className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:bg-gray-100 hover:shadow-1 dark:border-strokedark dark:text-white dark:hover:bg-meta-4"
               onClick={onCancel}
             >
               Cancel

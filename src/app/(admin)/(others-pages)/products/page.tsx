@@ -126,7 +126,7 @@ const ProductManagement = () => {
       </div>
 
       {!showForm ? (
-        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+        <div className="rounded-sm border border-stroke bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
           <div className="max-w-full overflow-x-auto">
             <table className="w-full table-auto">
               <thead>

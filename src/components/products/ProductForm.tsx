@@ -42,7 +42,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
   };
 
   return (
-    <div className="rounded-sm border border-stroke bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
+    <div className="rounded-sm border border-black/50 dark:border-white/50 bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
       <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
         <h3 className="font-medium text-black dark:text-white">
           {isEditing ? 'Edit Product' : 'Add New Product'}

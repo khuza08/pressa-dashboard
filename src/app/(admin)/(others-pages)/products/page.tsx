@@ -64,6 +64,21 @@ const ProductManagement = () => {
 
   const handleSaveProduct = async (productData: any) => {
     try {
+      // Only include fields that match the database schema, using snake_case names
+      const productPayload = {
+        name: productData.name,
+        price: productData.price,
+        image: productData.image,
+        rating: productData.rating || 0,
+        total_sold: productData.totalSold || '0',
+        store: productData.store,
+        description: productData.description || '',
+        category: productData.category || '',
+        stock: productData.stock || 0,
+        condition: productData.condition || '',
+        min_order: productData.minOrder || 1,
+      };
+
       let response;
       if (currentProduct) {
         // Update existing product
@@ -72,7 +87,7 @@ const ProductManagement = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(productData),
+          body: JSON.stringify(productPayload),
         });
       } else {
         // Create new product
@@ -81,11 +96,13 @@ const ProductManagement = () => {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(productData),
+          body: JSON.stringify(productPayload),
         });
       }
 
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('API Error:', response.status, errorText);
         throw new Error(currentProduct ? 'Failed to update product' : 'Failed to create product');
       }
 
@@ -93,10 +110,10 @@ const ProductManagement = () => {
 
       if (currentProduct) {
         // Update the product in the list
-        setProducts(products.map(p => p.id === savedProduct.id ? savedProduct : p));
+        setProducts(products?.map(p => p.id === savedProduct.id ? savedProduct : p) || [savedProduct]);
       } else {
         // Add the new product to the list
-        setProducts([...products, savedProduct]);
+        setProducts([...(products || []), savedProduct]);
       }
 
       setShowForm(false);
@@ -158,23 +175,25 @@ const ProductManagement = () => {
                       </div>
                     </td>
                     <td className="py-5 px-4">
-                      <p className="font-medium">${product.price.toFixed(2)}</p>
+                      <p className="font-medium text-black dark:text-white">${product.price.toFixed(2)}</p>
                     </td>
                     <td className="py-5 px-4">
-                      <span className="inline-flex rounded-full bg-primary bg-opacity-10 py-1 px-3 text-sm font-medium text-primary dark:bg-opacity-20">
+                      <span className="inline-flex rounded-full bg-primary bg-opacity-10 py-1 px-3 text-sm \
+                        font-medium text-primary dark:bg-opacity-20 dark:text-white">
                         {product.category || 'Uncategorized'}
                       </span>
                     </td>
                     <td className="py-5 px-4">
-                      <span className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
+                      <span className={`inline-flex rounded-full py-1 px-3 text-sm font-medium \
+                        ${
                         product.stock > 10
-                          ? 'bg-success bg-opacity-10 text-success dark:bg-opacity-20'
-                          : 'bg-warning bg-opacity-10 text-warning dark:bg-opacity-20'
+                          ? 'bg-success bg-opacity-10 text-success dark:bg-opacity-20 dark:text-white'
+                          : 'bg-warning bg-opacity-10 text-warning dark:bg-opacity-20 dark:text-white'
                       }`}>
                         {product.stock} in stock
                       </span>
                     </td>
-                    <td className="py-5 px-4">{product.store}</td>
+                    <td className="py-5 px-4 text-black dark:text-white">{product.store}</td>
                     <td className="py-5 px-4">
                       <div className="flex items-center space-x-2">
                         <button

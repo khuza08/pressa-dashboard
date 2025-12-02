@@ -16,25 +16,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
     name: product?.name || '',
     price: product?.price || 0,
     image: product?.image || '',
-    images: product?.images || [],
     rating: product?.rating || 0,
     totalSold: product?.totalSold || '',
     store: product?.store || '',
     description: product?.description || '',
     category: product?.category || '',
-    variants: product?.variants || [],
     stock: product?.stock || 0,
     condition: product?.condition || '',
     minOrder: product?.minOrder || 1,
-    features: product?.features || [],
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: name.includes('price') || name.includes('rating') || name.includes('stock') || name.includes('minOrder') 
-        ? Number(value) 
+      [name]: name === 'price' || name === 'rating' || name === 'stock' || name === 'minOrder'
+        ? Number(value)
         : value
     }));
   };

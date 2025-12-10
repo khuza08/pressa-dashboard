@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react';
 import { CarouselItem, carouselService } from '../../../../services/carouselService';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/api/v1';
+
 const CarouselPage = () => {
   const [carouselItems, setCarouselItems] = useState<CarouselItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -13,10 +15,20 @@ const CarouselPage = () => {
     title: '',
     description: '',
     image: '',
+    imageType: 'url' as 'url' | 'file',
     link: '',
     order: 0,
     isActive: true,
     category: ''
+  } as {
+    title: string;
+    description: string;
+    image: string;
+    imageType: 'url' | 'file';
+    link: string;
+    order: number;
+    isActive: boolean;
+    category: string;
   });
 
   // Fetch carousel items
@@ -25,7 +37,16 @@ const CarouselPage = () => {
       try {
         setLoading(true);
         const items = await carouselService.getAllCarouselItems();
-        setCarouselItems(items);
+        // Ensure all items have proper defaults to prevent undefined values
+        const normalizedItems = items.map(item => ({
+          ...item,
+          image: item.image || '',
+          imageType: item.imageType || 'url',
+          description: item.description || '',
+          link: item.link || '',
+          category: item.category || '',
+        }));
+        setCarouselItems(normalizedItems);
       } catch (err) {
         setError('Failed to load carousel items');
         console.error('Error loading carousel items:', err);
@@ -41,37 +62,105 @@ const CarouselPage = () => {
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    }));
+
+    if (name === 'imageType') {
+      // When switching imageType, clear the image field to prevent conflicts
+      setFormData(prev => ({
+        ...prev,
+        imageType: value as 'url' | 'file',
+        image: '' // Clear image when switching type
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      }));
+    }
+  };
+
+  // Handle image file changes
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // For file uploads, we'll handle this differently in the submit function
+      // For now, just set the file name in the image field temporarily
+      setFormData(prev => ({
+        ...prev,
+        image: file.name // This will be updated during actual upload
+      }));
+    }
   };
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     try {
+      let submitData = { ...formData };
+
+      // Handle file upload if imageType is 'file'
+      if (formData.imageType === 'file') {
+        const fileInput = document.querySelector('input[name="imageFile"]') as HTMLInputElement;
+
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+
+          // Create FormData for file upload
+          const uploadData = new FormData();
+          uploadData.append('file', file);
+
+          // Get the auth token
+          const token = localStorage.getItem('token');
+          if (!token) {
+            throw new Error('Authentication token not found. Please log in again.');
+          }
+
+          // Upload file to server
+          const uploadResponse = await fetch(`${API_BASE_URL}/upload`, {
+            method: 'POST',
+            body: uploadData,
+            headers: {
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          if (!uploadResponse.ok) {
+            const errorResult = await uploadResponse.json().catch(() => ({}));
+            throw new Error(errorResult.error || `Failed to upload image: ${uploadResponse.status}`);
+          }
+
+          const uploadResult = await uploadResponse.json();
+          submitData.image = uploadResult.filename; // Use the uploaded filename
+        } else {
+          // If we're in file mode but no file selected, and we're updating, keep the existing image
+          if (currentItem && !fileInput?.files?.[0]) {
+            // Don't change the image field, keep the existing one
+            submitData.image = currentItem.image;
+          } else {
+            throw new Error('Please select an image file to upload');
+          }
+        }
+      }
+
       if (currentItem) {
         // Update existing item
-        const updatedItem = await carouselService.updateCarouselItem(currentItem.id, formData);
+        const updatedItem = await carouselService.updateCarouselItem(currentItem.id, submitData);
         if (updatedItem) {
-          setCarouselItems(prev => prev.map(item => 
+          setCarouselItems(prev => prev.map(item =>
             item.id === updatedItem.id ? updatedItem : item
           ));
           closeModal();
         }
       } else {
         // Create new item
-        const newItem = await carouselService.createCarouselItem(formData);
+        const newItem = await carouselService.createCarouselItem(submitData);
         if (newItem) {
           setCarouselItems(prev => [...prev, newItem]);
           closeModal();
         }
       }
     } catch (err) {
-      setError('Failed to save carousel item');
+      setError(err instanceof Error ? err.message : 'Failed to save carousel item');
       console.error('Error saving carousel item:', err);
     }
   };
@@ -82,9 +171,10 @@ const CarouselPage = () => {
     setFormData({
       title: item.title,
       description: item.description || '',
-      image: item.image,
+      image: item.image || '',
+      imageType: item.imageType || 'url',
       link: item.link || '',
-      order: item.order,
+      order: item.order || 0,
       isActive: item.isActive,
       category: item.category || ''
     });
@@ -98,6 +188,7 @@ const CarouselPage = () => {
       title: '',
       description: '',
       image: '',
+      imageType: 'url',
       link: '',
       order: 0,
       isActive: true,
@@ -270,18 +361,46 @@ const CarouselPage = () => {
                 />
               </div>
               
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Image URL *
-                </label>
-                <input
-                  type="text"
-                  name="image"
-                  value={formData.image}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Image Type
+                  </label>
+                  <select
+                    name="imageType"
+                    value={formData.imageType}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  >
+                    <option value="url">URL</option>
+                    <option value="file">Upload File</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {formData.imageType === 'url' ? 'Image URL *' : 'Image File *'}
+                  </label>
+                  {formData.imageType === 'url' ? (
+                    <input
+                      key="image-url"
+                      type="text"
+                      name="image"
+                      value={typeof formData.image === 'string' ? formData.image : ''}
+                      onChange={handleInputChange}
+                      required={formData.imageType === 'url'}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  ) : (
+                    <input
+                      key="image-file"
+                      type="file"
+                      name="imageFile"
+                      onChange={handleImageFileChange}
+                      accept="image/*"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                    />
+                  )}
+                </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

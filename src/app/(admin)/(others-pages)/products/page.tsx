@@ -19,12 +19,14 @@ const ProductManagement = () => {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await fetch('http://localhost:8080/api/v1/products');
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+      const response = await fetch(`${API_BASE_URL}/api/v1/products`);
       if (!response.ok) {
         throw new Error('Failed to fetch products');
       }
       const data = await response.json();
-      setProducts(data);
+      // Ensure data is always an array
+      setProducts(Array.isArray(data) ? data : data.data || []);
     } catch (err) {
       setError('Failed to load products');
       console.error(err);
@@ -47,7 +49,8 @@ const ProductManagement = () => {
     if (!confirm('Are you sure you want to delete this product?')) return;
 
     try {
-      const response = await fetch(`http://localhost:8080/api/v1/products/${id}`, {
+      const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+      const response = await fetch(`${API_BASE_URL}/api/v1/products/${id}`, {
         method: 'DELETE',
       });
 
@@ -82,7 +85,8 @@ const ProductManagement = () => {
       let response;
       if (currentProduct) {
         // Update existing product
-        response = await fetch(`http://localhost:8080/api/v1/products/${currentProduct.id}`, {
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+        response = await fetch(`${API_BASE_URL}/api/v1/products/${currentProduct.id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -91,7 +95,8 @@ const ProductManagement = () => {
         });
       } else {
         // Create new product
-        response = await fetch('http://localhost:8080/api/v1/products', {
+        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+        response = await fetch(`${API_BASE_URL}/api/v1/products`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

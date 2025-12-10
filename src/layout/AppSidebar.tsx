@@ -38,6 +38,11 @@ const navItems: NavItem[] = [
     path: "/products",
   },
   {
+    icon: <ListIcon />,
+    name: "Carousel",
+    path: "/carousel",
+  },
+  {
     icon: <UserCircleIcon />,
     name: "User Profile",
     path: "/profile",

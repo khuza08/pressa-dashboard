@@ -109,19 +109,10 @@ const CarouselPage = () => {
           const uploadData = new FormData();
           uploadData.append('file', file);
 
-          // Get the auth token
-          const token = localStorage.getItem('token');
-          if (!token) {
-            throw new Error('Authentication token not found. Please log in again.');
-          }
-
-          // Upload file to server
+          // Upload file to server (without authentication)
           const uploadResponse = await fetch(`${API_BASE_URL}/upload`, {
             method: 'POST',
-            body: uploadData,
-            headers: {
-              'Authorization': `Bearer ${token}`
-            }
+            body: uploadData
           });
 
           if (!uploadResponse.ok) {

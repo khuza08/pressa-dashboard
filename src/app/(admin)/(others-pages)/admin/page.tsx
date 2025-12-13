@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useAuth } from '@/context/AuthContext';
 
 interface Admin {
   id: number;
@@ -17,24 +16,17 @@ export default function AdminManagement() {
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  const { user } = useAuth(); // This should be the current admin user
 
   useEffect(() => {
     const fetchAdmins = async () => {
       try {
         const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-        const response = await fetch(`${API_BASE_URL}/api/v1/admin`, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('auth_token')}`,
-            'Content-Type': 'application/json',
-          }
-        });
-        
+        const response = await fetch(`${API_BASE_URL}/api/v1/admin`);
+
         if (!response.ok) {
           throw new Error('Failed to fetch admins');
         }
-        
+
         const data = await response.json();
         setAdmins(data.admins || []);
       } catch (err) {
@@ -128,47 +120,18 @@ export default function AdminManagement() {
                   {admin.last_login ? new Date(admin.last_login).toLocaleString() : 'Never'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  {user?.id !== admin.id && ( // Prevent admin from modifying their own account
-                    <>
-                      <button className="text-indigo-600 hover:text-indigo-900 mr-3">
-                        Edit
-                      </button>
-                      <button className="text-red-600 hover:text-red-900">
-                        Remove
-                      </button>
-                    </>
-                  )}
+                  <button className="text-indigo-600 hover:text-indigo-900 mr-3">
+                    Edit
+                  </button>
+                  <button className="text-red-600 hover:text-red-900">
+                    Remove
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-
-      {/* Current Admin Info */}
-      {user && (
-        <div className="mt-8 p-6 bg-blue-50 rounded-lg border border-blue-200">
-          <h2 className="text-lg font-semibold text-blue-800 mb-4">Your Account</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <p className="text-gray-900">{user.name}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-              <p className="text-gray-900">{user.email}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
-              <p className="text-gray-900 capitalize">{user.role}</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-              <p className="text-green-600 font-medium">Active</p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

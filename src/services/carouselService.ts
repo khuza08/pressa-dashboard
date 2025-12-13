@@ -67,14 +67,13 @@ export const carouselService = {
     }
   },
 
-  // Admin methods - require authentication
+  // Methods that replace admin authentication with unauthenticated access
   createCarouselItem: async (item: Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<CarouselItem | null> => {
     try {
       const response = await fetch(`${API_BASE_URL}/api/v1/carousels`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming JWT token storage
         },
         body: JSON.stringify(item)
       });
@@ -105,7 +104,6 @@ export const carouselService = {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming JWT token storage
         },
         body: JSON.stringify(item)
       });
@@ -134,9 +132,6 @@ export const carouselService = {
     try {
       const response = await fetch(`${API_BASE_URL}/api/v1/carousels/${id}`, {
         method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming JWT token storage
-        }
       });
 
       return response.ok;
@@ -146,14 +141,10 @@ export const carouselService = {
     }
   },
 
-  // Method to get all carousel items (admin access)
+  // Method to get all carousel items
   getAllCarouselItems: async (): Promise<CarouselItem[]> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/carousels`, { // Note: This would typically require admin access
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}` // Assuming JWT token storage
-        }
-      });
+      const response = await fetch(`${API_BASE_URL}/api/v1/carousels`);
       if (!response.ok) {
         throw new Error(`Failed to fetch carousel items: ${response.status}`);
       }

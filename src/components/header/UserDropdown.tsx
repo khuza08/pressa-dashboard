@@ -1,25 +1,36 @@
 "use client";
+import { useRouter } from 'next/navigation';
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
+import { useAuth } from '@/context/AuthContext';
 import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
+  const { logout } = useAuth();
+  const router = useRouter();
 
-function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-  e.stopPropagation();
-  setIsOpen((prev) => !prev);
-}
+  function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev);
+  }
 
   function closeDropdown() {
     setIsOpen(false);
   }
+
+  const handleLogout = async () => {
+    await logout();
+    closeDropdown();
+    router.replace('/auth'); // Use replace to prevent back button to dashboard
+  };
+
   return (
     <div className="relative">
       <button
-        onClick={toggleDropdown} 
+        onClick={toggleDropdown}
         className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
       >
         <span className="mr-3 overflow-hidden rounded-full h-11 w-11">
@@ -144,9 +155,14 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             </DropdownItem>
           </li>
         </ul>
-        <div className="flex items-center gap-3 px-3 py-2 mt-3 font-medium text-gray-700 rounded-lg group text-theme-sm dark:text-gray-400">
+
+        {/* Logout option */}
+        <button
+          onClick={handleLogout}
+          className="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-red-600 rounded-lg group text-theme-sm hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+        >
           <svg
-            className="fill-gray-500"
+            className="fill-red-500 dark:fill-red-400"
             width="24"
             height="24"
             viewBox="0 0 24 24"
@@ -156,12 +172,12 @@ function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
             <path
               fillRule="evenodd"
               clipRule="evenodd"
-              d="M16.7079 6.05025C17.0984 6.44077 17.0984 7.07394 16.7079 7.46447L11.4144 12.7579L16.7079 18.0514C17.0984 18.4419 17.0984 19.0751 16.7079 19.4656C16.3174 19.8561 15.6842 19.8561 15.2937 19.4656L9.29372 13.4656C8.90319 13.0751 8.90319 12.4419 9.29372 12.0514L15.2937 6.05141C15.6842 5.66089 16.3174 5.66089 16.7079 6.05141L16.7079 6.05025Z"
-              fill=""
+              d="M16.7071 4.29289C17.0976 4.68342 17.0976 5.31658 16.7071 5.70711L9.41421 13L16.7071 20.2929C17.0976 20.6834 17.0976 21.3166 16.7071 21.7071C16.3166 22.0976 15.6834 22.0976 15.2929 21.7071L7.29289 13.7071C6.90237 13.3166 6.90237 12.6834 7.29289 12.2929L15.2929 4.29289C15.6834 3.90237 16.3166 3.90237 16.7071 4.29289Z"
+              fill="currentColor"
             />
           </svg>
-          Admin
-        </div>
+          Logout
+        </button>
       </Dropdown>
     </div>
   );

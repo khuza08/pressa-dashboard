@@ -84,6 +84,9 @@ export const logoutAdmin = async (): Promise<void> => {
  */
 export const checkAuthStatus = async (): Promise<AdminUser | null> => {
   try {
+    // Add a small delay to ensure cookie is set before checking
+    await new Promise(resolve => setTimeout(resolve, 100));
+
     const response = await fetch(`${API_BASE_URL}/api/admin/dashboard`, {
       method: 'GET',
       credentials: 'include', // Include JWT cookie

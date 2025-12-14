@@ -67,18 +67,24 @@ export const carouselService = {
     }
   },
 
-  // Methods that replace admin authentication with unauthenticated access
+  // Methods for admin operations with authentication
   createCarouselItem: async (item: Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<CarouselItem | null> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/carousels`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/carousels`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include JWT cookie for authentication
         body: JSON.stringify(item)
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          window.location.href = '/auth';
+          return null;
+        }
         throw new Error(`Failed to create carousel item: ${response.status}`);
       }
 
@@ -100,15 +106,21 @@ export const carouselService = {
 
   updateCarouselItem: async (id: number, item: Partial<CarouselItem>): Promise<CarouselItem | null> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/carousels/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/carousels/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include', // Include JWT cookie for authentication
         body: JSON.stringify(item)
       });
 
       if (!response.ok) {
+        if (response.status === 401) {
+          // If unauthorized, redirect to login
+          window.location.href = '/auth';
+          return null;
+        }
         throw new Error(`Failed to update carousel item: ${response.status}`);
       }
 
@@ -130,9 +142,16 @@ export const carouselService = {
 
   deleteCarouselItem: async (id: number): Promise<boolean> => {
     try {
-      const response = await fetch(`${API_BASE_URL}/api/v1/carousels/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/api/admin/carousels/${id}`, {
         method: 'DELETE',
+        credentials: 'include', // Include JWT cookie for authentication
       });
+
+      if (!response.ok && response.status === 401) {
+        // If unauthorized, redirect to login
+        window.location.href = '/auth';
+        return false;
+      }
 
       return response.ok;
     } catch (error) {

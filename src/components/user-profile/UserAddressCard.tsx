@@ -6,7 +6,19 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 
-export default function UserAddressCard() {
+type UserAddressCardProps = {
+  country?: string;
+  cityState?: string;
+  postalCode?: string;
+  taxId?: string;
+};
+
+export default function UserAddressCard({
+  country = 'United States',
+  cityState = 'Phoenix, Arizona, United States.',
+  postalCode = 'ERT 2489',
+  taxId = 'AS4568384'
+}: UserAddressCardProps = {}) {
   const { isOpen, openModal, closeModal } = useModal();
   const handleSave = () => {
     // Handle save logic here
@@ -28,7 +40,7 @@ export default function UserAddressCard() {
                   Country
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  United States
+                  {country}
                 </p>
               </div>
 
@@ -37,7 +49,7 @@ export default function UserAddressCard() {
                   City/State
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  Phoenix, Arizona, United States.
+                  {cityState}
                 </p>
               </div>
 
@@ -46,7 +58,7 @@ export default function UserAddressCard() {
                   Postal Code
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  ERT 2489
+                  {postalCode}
                 </p>
               </div>
 
@@ -55,7 +67,7 @@ export default function UserAddressCard() {
                   TAX ID
                 </p>
                 <p className="text-sm font-medium text-gray-800 dark:text-white/90">
-                  AS4568384
+                  {taxId}
                 </p>
               </div>
             </div>

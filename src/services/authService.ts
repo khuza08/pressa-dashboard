@@ -85,7 +85,7 @@ export const logoutAdmin = async (): Promise<void> => {
 export const checkAuthStatus = async (): Promise<AdminUser | null> => {
   try {
     // Add a small delay to ensure cookie is set before checking
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise(resolve => setTimeout(resolve, 300));
 
     const response = await fetch(`${API_BASE_URL}/api/admin/dashboard`, {
       method: 'GET',
@@ -100,13 +100,32 @@ export const checkAuthStatus = async (): Promise<AdminUser | null> => {
 
       if (response.ok) {
         // Return the admin data from the response
-        // This might vary based on your backend implementation
-        return data.admin || {
-          id: data.admin_id || 0,
-          email: data.admin_email,
-          name: data.admin_email?.split('@')[0] || 'Admin User',
-          role: data.admin_role || 'admin'
-        };
+        // The backend /api/admin/dashboard returns: { message: "...", admin: email }
+        if (data.message && typeof data.admin === 'string') {
+          // Format: { message: "Welcome...", admin: "email@domain.com" }
+          return {
+            id: 0, // We don't get ID from this endpoint, will get on later calls if needed
+            email: data.admin,
+            name: data.admin?.split('@')[0] || 'Admin User',
+            role: 'admin' // Default role, will be updated later if needed
+          };
+        } else if (data.id && data.email) {
+          // Alternative format if the backend changes
+          return {
+            id: data.id || 0,
+            email: data.email,
+            name: data.name || data.email?.split('@')[0] || 'Admin User',
+            role: data.role || 'admin'
+          };
+        } else {
+          // Fallback - try to get from any admin field
+          return {
+            id: data.admin_id || data.id || 0,
+            email: data.admin_email || data.email || data.admin,
+            name: data.admin_email?.split('@')[0] || data.name || data.admin?.split('@')[0] || 'Admin User',
+            role: data.admin_role || data.role || 'admin'
+          };
+        }
       }
     }
 

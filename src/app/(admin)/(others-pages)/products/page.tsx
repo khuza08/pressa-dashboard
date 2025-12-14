@@ -15,10 +15,16 @@ const formatImageUrl = (imagePath: string): string => {
   }
 
   // If it's a local upload path, construct the full URL
-  if (imagePath.includes('uploads/')) {
+  if (imagePath.includes('uploads')) {
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-    // Ensure the path starts with /uploads
-    const normalizedPath = imagePath.startsWith('/uploads') ? imagePath : `/uploads/${imagePath.split('uploads/')[1]}`;
+    // Normalize the path by replacing backslashes with forward slashes and ensuring it starts with /uploads
+    let normalizedPath = imagePath.replace(/\\/g, '/'); // Replace backslashes with forward slashes
+    if (!normalizedPath.startsWith('/')) {
+      normalizedPath = '/' + normalizedPath;
+    }
+    if (!normalizedPath.startsWith('/uploads')) {
+      normalizedPath = '/uploads/' + normalizedPath.split('uploads/')[1];
+    }
     return `${baseUrl}${normalizedPath}`;
   }
 

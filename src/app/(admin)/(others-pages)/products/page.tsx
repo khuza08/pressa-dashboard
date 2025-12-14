@@ -5,6 +5,27 @@ import { Product } from '@/types/product';
 import ProductForm from '@/components/products/ProductForm';
 import AuthGuard from '../../auth-guard';
 
+// Helper function to format image URLs
+const formatImageUrl = (imagePath: string): string => {
+  if (!imagePath) return '';
+
+  // If it's already an absolute URL, return as is
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+
+  // If it's a local upload path, construct the full URL
+  if (imagePath.includes('uploads/')) {
+    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+    // Ensure the path starts with /uploads
+    const normalizedPath = imagePath.startsWith('/uploads') ? imagePath : `/uploads/${imagePath.split('uploads/')[1]}`;
+    return `${baseUrl}${normalizedPath}`;
+  }
+
+  // For other cases, return as is
+  return imagePath;
+};
+
 const ProductManagement = () => {
   const [products, setProducts] = useState<Product[] | null>(null);
   const [loading, setLoading] = useState(true);
@@ -81,44 +102,60 @@ const ProductManagement = () => {
 
   const handleSaveProduct = async (productData: any) => {
     try {
-      // Only include fields that match the database schema, using snake_case names
-      const productPayload = {
-        name: productData.name,
-        price: productData.price,
-        image: productData.image,
-        rating: productData.rating || 0,
-        total_sold: productData.totalSold || '0',
-        store: productData.store,
-        description: productData.description || '',
-        category: productData.category || '',
-        stock: productData.stock || 0,
-        condition: productData.condition || '',
-        min_order: productData.minOrder || 1,
-      };
+      // Create FormData for multipart upload
+      const formData = new FormData();
+
+      // Add all text fields to the FormData using snake_case names to match database schema
+      formData.append('name', productData.name);
+      formData.append('price', String(productData.price));
+      formData.append('rating', String(productData.rating || 0));
+      formData.append('total_sold', productData.totalSold || '0');
+      formData.append('store', productData.store);
+      formData.append('description', productData.description || '');
+      formData.append('category', productData.category || '');
+      formData.append('stock', String(productData.stock || 0));
+      formData.append('condition', productData.condition || '');
+      formData.append('min_order', String(productData.minOrder || 1));
+
+      // Handle image file
+      if (productData.image instanceof File) {
+        // New image file to upload
+        formData.append('image', productData.image, productData.image.name);
+      } else if (productData.image && typeof productData.image === 'string') {
+        // Existing image path to keep (for edit operations when no new file is selected)
+        // Normalize the image path to remove base URL if present and keep just the /uploads part
+        let imagePath = productData.image;
+        if (imagePath.includes('uploads/')) {
+          const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+          // Remove the base URL part, keeping only the path after hostname
+          imagePath = imagePath.replace(baseUrl, '').replace('http://', '').replace('https://', '');
+          if (!imagePath.startsWith('/')) imagePath = '/' + imagePath;
+        }
+        formData.append('image', imagePath);
+      }
 
       let response;
-      if (currentProduct) {
-        // Update existing product
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-        response = await fetch(`${API_BASE_URL}/api/admin/products/${currentProduct.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Include JWT cookie for authentication
-          body: JSON.stringify(productPayload),
-        });
-      } else {
-        // Create new product
-        const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
-        response = await fetch(`${API_BASE_URL}/api/admin/products`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          credentials: 'include', // Include JWT cookie for authentication
-          body: JSON.stringify(productPayload),
-        });
+      try {
+        if (currentProduct) {
+          // Update existing product
+          const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+          response = await fetch(`${API_BASE_URL}/api/admin/products/${currentProduct.id}`, {
+            method: 'PUT',
+            credentials: 'include', // Include JWT cookie for authentication
+            body: formData,
+          });
+        } else {
+          // Create new product
+          const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+          response = await fetch(`${API_BASE_URL}/api/admin/products`, {
+            method: 'POST',
+            credentials: 'include', // Include JWT cookie for authentication
+            body: formData,
+          });
+        }
+      } catch (networkError) {
+        console.error('Network error:', networkError);
+        throw new Error('Network error: Could not connect to server. Please check if the backend is running.');
       }
 
       if (!response.ok) {
@@ -190,7 +227,7 @@ const ProductManagement = () => {
                         <div className="flex items-center">
                           <div className="h-16 w-16 rounded-md">
                             <img
-                              src={product.image}
+                              src={formatImageUrl(product.image)}
                               alt={product.name}
                               className="h-full w-full rounded object-cover"
                             />

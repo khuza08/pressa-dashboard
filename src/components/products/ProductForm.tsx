@@ -15,7 +15,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
   const [formData, setFormData] = useState<Omit<Product, 'id' | 'createdAt' | 'updatedAt'> | Partial<Product>>({
     name: product?.name || '',
     price: product?.price || 0,
-    image: product?.image || '',
     rating: product?.rating || 0,
     totalSold: product?.totalSold || '',
     store: product?.store || '',
@@ -25,6 +24,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
     condition: product?.condition || '',
     minOrder: product?.minOrder || 1,
   });
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  // Helper function to format image URLs
+  const formatImageUrl = (imagePath: string): string => {
+    if (!imagePath) return '';
+
+    // If it's already an absolute URL, return as is
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // If it's a local upload path, construct the full URL
+    if (imagePath.includes('uploads/')) {
+      const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
+      // Ensure the path starts with /uploads
+      const normalizedPath = imagePath.startsWith('/uploads') ? imagePath : `/uploads/${imagePath.split('uploads/')[1]}`;
+      return `${baseUrl}${normalizedPath}`;
+    }
+
+    // For other cases, return as is
+    return imagePath;
+  };
+
+  const [imagePreview, setImagePreview] = useState<string | null>(product?.image ? formatImageUrl(product.image) : null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -36,9 +59,86 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
     }));
   };
 
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      let file = e.target.files[0];
+      const fileType = file.type;
+
+      // Check if the file is already avif or webp
+      if (fileType.includes('avif') || fileType.includes('webp')) {
+        // File is already in accepted format
+        setSelectedImage(file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setImagePreview(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // Convert the image to AVIF
+        try {
+          const convertedFile = await convertToAvif(file);
+          setSelectedImage(convertedFile);
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setImagePreview(reader.result as string);
+          };
+          reader.readAsDataURL(convertedFile);
+        } catch (error) {
+          alert('Failed to convert image to AVIF format. Please try another image.');
+          e.target.value = ''; // Reset the input
+          console.error('Image conversion error:', error);
+        }
+      }
+    }
+  };
+
+  // Function to convert image to AVIF format
+  const convertToAvif = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+
+      img.onload = () => {
+        // Set canvas dimensions to match the image
+        canvas.width = img.width;
+        canvas.height = img.height;
+
+        // Draw the image on the canvas
+        ctx?.drawImage(img, 0, 0);
+
+        // Convert to AVIF blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            // Create a new File from the blob
+            const avifFile = new File([blob], file.name.replace(/\.[^/.]+$/, '.avif'), {
+              type: 'image/avif',
+              lastModified: Date.now()
+            });
+            resolve(avifFile);
+          } else {
+            reject(new Error('Canvas toBlob failed'));
+          }
+        }, 'image/avif', 0.8); // quality: 0.8 (80%)
+      };
+
+      img.onerror = reject;
+      img.src = URL.createObjectURL(file);
+    });
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    onSave(formData);
+
+    // Create a FormData object to handle file uploads
+    const productData: any = { ...formData };
+    if (selectedImage) {
+      productData.image = selectedImage;
+    } else if (product?.image) {
+      productData.image = product.image; // Keep existing image if editing and no new file selected
+    }
+
+    onSave(productData);
   };
 
   return (
@@ -123,16 +223,30 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
 
           <div className="mb-4.5">
             <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
-              Image URL
+              Product Image
             </label>
-            <input
-              type="text"
-              name="image"
-              value={formData.image}
-              onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
-              required
-            />
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+                />
+                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                  Image will be automatically converted to AVIF format
+                </p>
+              </div>
+              {imagePreview && (
+                <div className="h-16 w-16 rounded-md overflow-hidden">
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
           <div className="mb-4.5">

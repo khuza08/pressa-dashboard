@@ -16,7 +16,6 @@ const CarouselPage = () => {
     title: '',
     description: '',
     image: '',
-    imageType: 'url' as 'url' | 'file',
     link: '',
     order: 0,
     isActive: true,
@@ -25,12 +24,12 @@ const CarouselPage = () => {
     title: string;
     description: string;
     image: string;
-    imageType: 'url' | 'file';
     link: string;
     order: number;
     isActive: boolean;
     category: string;
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   // Fetch carousel items
   useEffect(() => {
@@ -75,34 +74,24 @@ const CarouselPage = () => {
   }, []);
 
   // Handle form input changes
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
     const checked = type === 'checkbox' ? (e.target as HTMLInputElement).checked : undefined;
 
-    if (name === 'imageType') {
-      // When switching imageType, clear the image field to prevent conflicts
-      setFormData(prev => ({
-        ...prev,
-        imageType: value as 'url' | 'file',
-        image: '' // Clear image when switching type
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        [name]: type === 'checkbox' ? checked : value
-      }));
-    }
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }));
   };
 
   // Handle image file changes
   const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // For file uploads, we'll handle this differently in the submit function
-      // For now, just set the file name in the image field temporarily
+      setSelectedFile(file);
       setFormData(prev => ({
         ...prev,
-        image: file.name // This will be updated during actual upload
+        image: file.name // Display the selected filename
       }));
     }
   };
@@ -112,46 +101,9 @@ const CarouselPage = () => {
     e.preventDefault();
 
     try {
-      let submitData = { ...formData };
-
-      // Handle file upload if imageType is 'file'
-      if (formData.imageType === 'file') {
-        const fileInput = document.querySelector('input[name="imageFile"]') as HTMLInputElement;
-
-        if (fileInput && fileInput.files && fileInput.files[0]) {
-          const file = fileInput.files[0];
-
-          // Create FormData for file upload
-          const uploadData = new FormData();
-          uploadData.append('file', file);
-
-          // Upload file to server (without authentication)
-          const uploadResponse = await fetch(`${API_BASE_URL}/upload`, {
-            method: 'POST',
-            body: uploadData
-          });
-
-          if (!uploadResponse.ok) {
-            const errorResult = await uploadResponse.json().catch(() => ({}));
-            throw new Error(errorResult.error || `Failed to upload image: ${uploadResponse.status}`);
-          }
-
-          const uploadResult = await uploadResponse.json();
-          submitData.image = uploadResult.filename; // Use the uploaded filename
-        } else {
-          // If we're in file mode but no file selected, and we're updating, keep the existing image
-          if (currentItem && !fileInput?.files?.[0]) {
-            // Don't change the image field, keep the existing one
-            submitData.image = currentItem.image;
-          } else {
-            throw new Error('Please select an image file to upload');
-          }
-        }
-      }
-
       if (currentItem) {
         // Update existing item
-        const updatedItem = await carouselService.updateCarouselItem(currentItem.id, submitData);
+        const updatedItem = await carouselService.updateCarouselItem(currentItem.id, formData, selectedFile);
         if (updatedItem) {
           setCarouselItems(prev => prev.map(item =>
             item.id === updatedItem.id ? updatedItem : item
@@ -159,8 +111,12 @@ const CarouselPage = () => {
           closeModal();
         }
       } else {
-        // Create new item
-        const newItem = await carouselService.createCarouselItem(submitData);
+        // Create new item - require file to be selected
+        if (!selectedFile) {
+          throw new Error('Please select an image file to upload');
+        }
+
+        const newItem = await carouselService.createCarouselItem(formData, selectedFile);
         if (newItem) {
           setCarouselItems(prev => [...prev, newItem]);
           closeModal();
@@ -179,12 +135,12 @@ const CarouselPage = () => {
       title: item.title,
       description: item.description || '',
       image: item.image || '',
-      imageType: item.imageType || 'url',
       link: item.link || '',
       order: item.order || 0,
       isActive: item.isActive,
       category: item.category || ''
     });
+    setSelectedFile(null); // Clear selected file when editing existing item
     setIsModalOpen(true);
   };
 
@@ -195,12 +151,12 @@ const CarouselPage = () => {
       title: '',
       description: '',
       image: '',
-      imageType: 'url',
       link: '',
       order: 0,
       isActive: true,
       category: ''
     });
+    setSelectedFile(null); // Clear selected file when creating new item
     setIsModalOpen(true);
   };
 
@@ -275,7 +231,7 @@ const CarouselPage = () => {
                 <tr key={item.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <img
-                      src={item.image}
+                      src={`${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080'}/uploads/${item.image}`}
                       alt={item.title}
                       className="h-12 w-12 object-cover rounded"
                     />
@@ -369,46 +325,27 @@ const CarouselPage = () => {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Image Type
-                    </label>
-                    <select
-                      name="imageType"
-                      value={formData.imageType}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                    >
-                      <option value="url">URL</option>
-                      <option value="file">Upload File</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      {formData.imageType === 'url' ? 'Image URL *' : 'Image File *'}
-                    </label>
-                    {formData.imageType === 'url' ? (
-                      <input
-                        key="image-url"
-                        type="text"
-                        name="image"
-                        value={typeof formData.image === 'string' ? formData.image : ''}
-                        onChange={handleInputChange}
-                        required={formData.imageType === 'url'}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                      />
-                    ) : (
-                      <input
-                        key="image-file"
-                        type="file"
-                        name="imageFile"
-                        onChange={handleImageFileChange}
-                        accept="image/*"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-md"
-                      />
-                    )}
-                  </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Image File *
+                  </label>
+                  <input
+                    type="file"
+                    name="imageFile"
+                    onChange={handleImageFileChange}
+                    accept="image/*"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  />
+                  {formData.image && !selectedFile && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      Current image: {formData.image}
+                    </div>
+                  )}
+                  {selectedFile && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      Selected file: {selectedFile.name}
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">

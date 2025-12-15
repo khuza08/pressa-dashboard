@@ -6,7 +6,6 @@ export interface CarouselItem {
   title: string;
   description: string;
   image: string;
-  imageType?: 'url' | 'file'; // Added image type field
   link?: string;
   order: number;
   isActive: boolean;
@@ -68,15 +67,27 @@ export const carouselService = {
   },
 
   // Methods for admin operations with authentication
-  createCarouselItem: async (item: Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'>): Promise<CarouselItem | null> => {
+  createCarouselItem: async (item: Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'>, file: File | null): Promise<CarouselItem | null> => {
     try {
+      const formData = new FormData();
+
+      // Add all the form fields
+      formData.append('title', item.title);
+      formData.append('description', item.description || '');
+      formData.append('link', item.link || '');
+      formData.append('order', String(item.order || 0));
+      formData.append('is_active', String(item.isActive));
+      formData.append('category', item.category || '');
+
+      // Add the image file if provided
+      if (file) {
+        formData.append('image', file, file.name);
+      }
+
       const response = await fetch(`${API_BASE_URL}/api/admin/carousels`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: 'include', // Include JWT cookie for authentication
-        body: JSON.stringify(item)
+        body: formData
       });
 
       if (!response.ok) {
@@ -93,7 +104,6 @@ export const carouselService = {
       return {
         ...createdItem,
         image: createdItem.image || '',
-        imageType: createdItem.imageType || 'url',
         description: createdItem.description || '',
         link: createdItem.link || '',
         category: createdItem.category || '',
@@ -104,15 +114,27 @@ export const carouselService = {
     }
   },
 
-  updateCarouselItem: async (id: number, item: Partial<CarouselItem>): Promise<CarouselItem | null> => {
+  updateCarouselItem: async (id: number, item: Partial<CarouselItem>, file: File | null): Promise<CarouselItem | null> => {
     try {
+      const formData = new FormData();
+
+      // Add all the form fields
+      if (item.title !== undefined) formData.append('title', item.title);
+      if (item.description !== undefined) formData.append('description', item.description);
+      if (item.link !== undefined) formData.append('link', item.link);
+      if (item.order !== undefined) formData.append('order', String(item.order));
+      if (item.isActive !== undefined) formData.append('is_active', String(item.isActive));
+      if (item.category !== undefined) formData.append('category', item.category);
+
+      // Add the image file if provided
+      if (file) {
+        formData.append('image', file, file.name);
+      }
+
       const response = await fetch(`${API_BASE_URL}/api/admin/carousels/${id}`, {
         method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
         credentials: 'include', // Include JWT cookie for authentication
-        body: JSON.stringify(item)
+        body: formData
       });
 
       if (!response.ok) {
@@ -129,7 +151,6 @@ export const carouselService = {
       return {
         ...updatedItem,
         image: updatedItem.image || '',
-        imageType: updatedItem.imageType || 'url',
         description: updatedItem.description || '',
         link: updatedItem.link || '',
         category: updatedItem.category || '',

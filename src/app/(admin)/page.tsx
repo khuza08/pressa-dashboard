@@ -77,7 +77,7 @@ export default function Ecommerce() {
         <div className="flex justify-center items-center h-64">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-400">Loading dashboard...</p>
+            <p className="mt-4 text-gray-400 dark:text-gray-400">Loading dashboard...</p>
           </div>
         </div>
       </AuthGuard>
@@ -89,59 +89,59 @@ export default function Ecommerce() {
       <div className="space-y-6">
         {/* Dashboard Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-black dark:text-white">Dashboard Overview</h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Welcome back! Here's what's happening with your store today.</p>
+          <h1 className="text-2xl font-bold text-white dark:text-white">Dashboard Overview</h1>
+          <p className="text-sm text-gray-400 dark:text-gray-400">Welcome back! Here's what's happening with your store today.</p>
         </div>
 
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {/* Total Products Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-xl dark:bg-blue-900/30">
-              <FaBox className="text-blue-600 dark:text-blue-400 text-xl" />
+          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-900/30 rounded-xl dark:bg-blue-900/30">
+              <FaBox className="text-blue-400 dark:text-blue-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Total Products</span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+              <span className="text-sm text-gray-400 dark:text-gray-400">Total Products</span>
+              <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {totalProducts}
               </h4>
             </div>
           </div>
 
           {/* Active Carousels Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-xl dark:bg-green-900/30">
-              <FaImages className="text-green-600 dark:text-green-400 text-xl" />
+          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
+            <div className="flex items-center justify-center w-12 h-12 bg-green-900/30 rounded-xl dark:bg-green-900/30">
+              <FaImages className="text-green-400 dark:text-green-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Active Carousels</span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+              <span className="text-sm text-gray-400 dark:text-gray-400">Active Carousels</span>
+              <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {activeCarousels}
               </h4>
             </div>
           </div>
 
           {/* Low Stock Products Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-center w-12 h-12 bg-yellow-100 rounded-xl dark:bg-yellow-900/30">
-              <FaBox className="text-yellow-600 dark:text-yellow-400 text-xl" />
+          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
+            <div className="flex items-center justify-center w-12 h-12 bg-yellow-900/30 rounded-xl dark:bg-yellow-900/30">
+              <FaBox className="text-yellow-400 dark:text-yellow-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Low Stock Items</span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+              <span className="text-sm text-gray-400 dark:text-gray-400">Low Stock Items</span>
+              <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {lowStockProducts}
               </h4>
             </div>
           </div>
 
           {/* Total Carousels Card */}
-          <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03]">
-            <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-xl dark:bg-purple-900/30">
-              <FaImages className="text-purple-600 dark:text-purple-400 text-xl" />
+          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
+            <div className="flex items-center justify-center w-12 h-12 bg-purple-900/30 rounded-xl dark:bg-purple-900/30">
+              <FaImages className="text-purple-400 dark:text-purple-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Total Carousels</span>
-              <h4 className="mt-2 font-bold text-gray-800 text-title-sm dark:text-white/90">
+              <span className="text-sm text-gray-400 dark:text-gray-400">Total Carousels</span>
+              <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {totalCarousels}
               </h4>
             </div>
@@ -151,7 +151,7 @@ export default function Ecommerce() {
         {/* Products and Carousels Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Products */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-black rounded-2xl border border-gray-800 p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-lg text-gray-800 dark:text-white">Recent Products</h3>
               <a href="/products" className="text-sm text-blue-500 hover:underline">View All</a>
@@ -159,7 +159,7 @@ export default function Ecommerce() {
 
             <div className="space-y-4">
               {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800">
                   <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
                     {product.image ? (
                       // Check if the image is already a full URL
@@ -208,7 +208,7 @@ export default function Ecommerce() {
           </div>
 
           {/* Active Carousels */}
-          <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 p-6">
+          <div className="bg-black rounded-2xl border border-gray-800 p-6">
             <div className="flex justify-between items-center mb-6">
               <h3 className="font-bold text-lg text-gray-800 dark:text-white">Active Carousels</h3>
               <a href="/carousel" className="text-sm text-blue-500 hover:underline">View All</a>
@@ -216,7 +216,7 @@ export default function Ecommerce() {
 
             <div className="space-y-4">
               {carousels.filter(c => c.isActive).slice(0, 5).map((carousel) => (
-                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800">
                   <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
                     {carousel.image ? (
                       // Check if the image is already a full URL

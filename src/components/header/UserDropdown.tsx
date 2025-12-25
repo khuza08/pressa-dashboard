@@ -24,10 +24,10 @@ export default function UserDropdown() {
   const handleLogout = async () => {
     await logout();
     closeDropdown();
-    router.replace('/auth'); // Use replace to prevent back button to dashboard
+    router.replace('/auth'); // use replace to prevent back button to dashboard
   };
 
-  // Use user data from auth context or fallback to default values
+  // use user data from auth context or fallback to default values
   const displayName = user?.name || user?.email?.split('@')[0] || 'Admin User';
   const displayEmail = user?.email || 'admin@example.com';
 

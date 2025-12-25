@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Outfit } from 'next/font/google';
 import './globals.css';
 
@@ -8,6 +9,11 @@ import { AuthProvider } from '@/context/AuthContext';
 const outfit = Outfit({
   subsets: ["latin"],
 });
+
+export const metadata: Metadata = {
+  title: "PRESSA Dashboard",
+  description: "Admin dashboard for managing e-commerce store",
+};
 
 export default function RootLayout({
   children,

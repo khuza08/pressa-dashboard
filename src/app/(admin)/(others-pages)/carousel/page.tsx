@@ -193,18 +193,18 @@ const CarouselPage = () => {
     <AuthGuard>
       <div className="p-6">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Carousel Management</h1>
+          <h1 className="text-2xl font-bold text-black dark:text-white">Carousel Management</h1>
           <button
             onClick={openCreateModal}
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
+            className="bg-blue-500 text-white px-4 py-2 rounded-lg "
           >
             Add Carousel Item
           </button>
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-hidden">
+        <div className="bg-white/5 rounded-lg shadow-md overflow-hidden">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+            <thead className="bg-white/5">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                   Image

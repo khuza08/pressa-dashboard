@@ -7,6 +7,8 @@ interface DropdownProps {
   onClose: () => void;
   children: React.ReactNode;
   className?: string;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -14,25 +16,11 @@ export const Dropdown: React.FC<DropdownProps> = ({
   onClose,
   children,
   className = "",
+  onMouseEnter,
+  onMouseLeave,
 }) => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
- useEffect(() => {
-  const handleClickOutside = (event: MouseEvent) => {
-    if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node) &&
-      !(event.target as HTMLElement).closest('.dropdown-toggle')
-    ) {
-      onClose();
-    }
-  };
-
-  document.addEventListener("mousedown", handleClickOutside);
-  return () => {
-    document.removeEventListener("mousedown", handleClickOutside);
-  };
-}, [onClose]);
 
 
   if (!isOpen) return null;
@@ -40,7 +28,9 @@ export const Dropdown: React.FC<DropdownProps> = ({
   return (
     <div
       ref={dropdownRef}
-      className={`absolute z-40 right-0 mt-2 rounded-xl border border-white/20 bg-white/5 shadow-theme-lg backdrop-blur-lg ${className}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      className={`absolute z-40 right-0 mt-2 rounded-xl border border-white/20 bg-black/5 shadow-theme-lg backdrop-blur-lg ${className}`}
     >
       {children}
     </div>

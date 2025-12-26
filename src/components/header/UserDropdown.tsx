@@ -12,9 +12,8 @@ export default function UserDropdown() {
   const { user, logout } = useAuth();
   const router = useRouter();
 
-  function toggleDropdown(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-    e.stopPropagation();
-    setIsOpen((prev) => !prev);
+  function openDropdown() {
+    setIsOpen(true);
   }
 
   function closeDropdown() {
@@ -34,7 +33,7 @@ export default function UserDropdown() {
   return (
     <div className="relative">
       <button
-        onClick={toggleDropdown}
+        onMouseEnter={openDropdown}
         className="flex items-center bg-white/5 text-white/80 rounded-full border border-white/20 py-2 px-4">
         <span className="mr-4 flex items-center justify-center rounded-full h-7 w-7">
           <FaUserTie className="text-white/80 text-lg" />
@@ -66,6 +65,8 @@ export default function UserDropdown() {
         isOpen={isOpen}
         onClose={closeDropdown}
         className="absolute right-0 mt-8 flex w-64 flex-col p-3"
+        onMouseEnter={() => setIsOpen(true)}
+        onMouseLeave={closeDropdown}
       >
         <div>
           <span className="block font-medium text-white/80 text-theme-sm">

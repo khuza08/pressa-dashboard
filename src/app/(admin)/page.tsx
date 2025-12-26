@@ -45,6 +45,7 @@ export default function Ecommerce() {
   const [lowStockProducts, setLowStockProducts] = useState(0);
   const [activeCarousels, setActiveCarousels] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [carouselView, setCarouselView] = useState<'active' | 'inactive'>('active'); // New state for carousel view
 
   // Fetch data from the backend
   useEffect(() => {
@@ -221,47 +222,99 @@ export default function Ecommerce() {
 
           {/* Active Carousels */}
           <div className="rounded-2xl border border-white/20 bg-white/5 p-6">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg text-white/80 bg-white/5 border border-white/20 rounded-full py-2 px-4">Active Carousels</h3>
+            <div className="flex items-center mb-6">
+              <h3 className="font-bold text-lg text-white/80 bg-white/5 border border-white/20 rounded-full py-2 px-4">Carousels</h3>
+              <div className="flex-1 flex justify-center">
+                <div className="flex rounded-full border border-white/20 overflow-hidden">
+                  <button
+                    onClick={() => setCarouselView('active')}
+                    className={`px-4 py-2 text-sm ${
+                      carouselView === 'active'
+                        ? 'bg-white/10 text-white'
+                        : 'bg-white/5 text-white/60 hover:bg-white/10'
+                    }`}
+                  >
+                    Active
+                  </button>
+                  <button
+                    onClick={() => setCarouselView('inactive')}
+                    className={`px-4 py-2 text-sm ${
+                      carouselView === 'inactive'
+                        ? 'bg-white/10 text-white'
+                        : 'bg-white/5 text-white/60 hover:bg-white/10'
+                    }`}
+                  >
+                    Inactive
+                  </button>
+                </div>
+              </div>
               <a href="/carousel" className="text-sm text-blue-500 hover:bg-blue-900/50 transition-all border border-white/20 bg-white/5 rounded-full py-2 px-4">View All</a>
             </div>
 
             <div className="bg-white/5 rounded-lg border border-white/20 h-72 flex flex-col">
               <div className="overflow-y-auto custom-scrollbar flex-grow">
-                {carousels.filter(c => c.isActive).map((carousel) => (
-                  <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
-                    <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
-                      {carousel.image ? (
-                        <img
-                          src={getImageUrl(carousel.image)}
-                          alt={carousel.title}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      ) : (
-                        <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                          <FaImages className="text-gray-400" />
+                {carouselView === 'active'
+                  ? carousels.filter(c => c.isActive).map((carousel) => (
+                      <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                        <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
+                          {carousel.image ? (
+                            <img
+                              src={getImageUrl(carousel.image)}
+                              alt={carousel.title}
+                              className="w-full h-full object-cover rounded-md"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                              <FaImages className="text-gray-400" />
+                            </div>
+                          )}
                         </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
-                      <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
-                      <div className="mt-1">
-                        <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full border border-white/20 bg-white/5 ${
-                          carousel.isActive
-                            ? 'bg-gray-700 text-gray-200 dark:bg-gray-700/30 dark:text-gray-300'
-                            : 'bg-gray-900 text-gray-400 dark:bg-gray-900/30 dark:text-gray-500'
-                        }`}>
-                          {carousel.isActive ? 'Active' : 'Inactive'}
-                        </span>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
+                          <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
+                          <div className="mt-1">
+                            <span className="inline-flex items-center text-xs px-2 py-1 rounded-full border border-white/20 bg-gray-700 text-gray-200 dark:bg-gray-700/30 dark:text-gray-300">
+                              Active
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
+                    ))
+                  : carousels.filter(c => !c.isActive).map((carousel) => (
+                      <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                        <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
+                          {carousel.image ? (
+                            <img
+                              src={getImageUrl(carousel.image)}
+                              alt={carousel.title}
+                              className="w-full h-full object-cover rounded-md"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                              <FaImages className="text-gray-400" />
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
+                          <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
+                          <div className="mt-1">
+                            <span className="inline-flex items-center text-xs font-bold text-white/80">
+                              Inactive
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
 
-                {carousels.filter(c => c.isActive).length === 0 && (
+                {carouselView === 'active' && carousels.filter(c => c.isActive).length === 0 && (
                   <div className="text-center py-8 text-white/60">
                     No active carousels. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
+                  </div>
+                )}
+                {carouselView === 'inactive' && carousels.filter(c => !c.isActive).length === 0 && (
+                  <div className="text-center py-8 text-white/60">
+                    No inactive carousels. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
                   </div>
                 )}
               </div>

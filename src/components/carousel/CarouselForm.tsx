@@ -29,12 +29,24 @@ const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel 
     return `${baseUrl}/uploads/${cleanPath}`;
   };
 
+  // Helper function to normalize isActive status
+  const normalizeIsActive = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'string') return value.toLowerCase() === 'true';
+    if (typeof value === 'number') return value === 1;
+    return false;
+  };
+
+  console.log('Initial carousel data:', carousel); // Debug log
+  console.log('Initial isActive value (is_active):', carousel?.is_active); // Debug log
+  console.log('Initial isActive value (isActive):', carousel?.isActive); // Debug log
+
   const [formData, setFormData] = useState<Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'> | Partial<CarouselItem>>({
     title: carousel?.title || '',
     description: carousel?.description || '',
     link: carousel?.link || '',
     order: carousel?.order || 0,
-    isActive: carousel?.isActive || false,
+    isActive: normalizeIsActive(carousel?.is_active !== undefined ? carousel.is_active : carousel?.isActive),
     category: carousel?.category || '',
   });
 
@@ -70,6 +82,9 @@ const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel 
 
     // Create a FormData object to handle file uploads
     const carouselData: any = { ...formData };
+    // Rename isActive to is_active to match backend expectations
+    carouselData.is_active = formData.isActive;
+
     if (selectedImage) {
       carouselData.image = selectedImage;
     } else if (carousel?.image) {
@@ -82,6 +97,8 @@ const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel 
       carouselData.image = imagePath; // Keep existing image filename if editing and no new file selected
     }
 
+    console.log('Saving carousel data:', carouselData); // Debug log
+    console.log('isActive value being saved:', carouselData.is_active); // Debug log
     onSave(carouselData);
   };
 
@@ -141,7 +158,7 @@ const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel 
                   <input
                     type="checkbox"
                     name="isActive"
-                    checked={formData.isActive}
+                    checked={!!formData.isActive}
                     onChange={handleChange}
                     className="sr-only"
                   />

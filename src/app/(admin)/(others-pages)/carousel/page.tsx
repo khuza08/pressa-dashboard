@@ -29,6 +29,14 @@ const CarouselManagement = () => {
     return `${baseUrl}/uploads/${cleanPath}`;
   };
 
+  // Helper function to normalize isActive status
+  const normalizeIsActive = (value: any): boolean => {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'string') return value.toLowerCase() === 'true';
+    if (typeof value === 'number') return value === 1;
+    return false;
+  };
+
   // Load carousels from the Go backend
   useEffect(() => {
     fetchCarousels();
@@ -50,8 +58,15 @@ const CarouselManagement = () => {
         throw new Error('Failed to fetch carousels');
       }
       const data = await response.json();
+      console.log('Fetched carousels:', data); // Debug log
       // Ensure data is always an array
-      setCarousels(Array.isArray(data) ? data : data.data || []);
+      const carouselsList = Array.isArray(data) ? data : data.data || [];
+      console.log('Normalized carousels:', carouselsList); // Debug log
+      // Log each carousel's isActive value
+      carouselsList.forEach((carousel, index) => {
+        console.log(`Carousel ${index} (id: ${carousel.id}) isActive:`, carousel.is_active !== undefined ? carousel.is_active : carousel.isActive, typeof (carousel.is_active !== undefined ? carousel.is_active : carousel.isActive)); // Debug log
+      });
+      setCarousels(carouselsList);
     } catch (err) {
       setError('Failed to load carousels');
       console.error(err);
@@ -106,7 +121,8 @@ const CarouselManagement = () => {
       formData.append('description', carouselData.description || '');
       formData.append('link', carouselData.link || '');
       formData.append('order', String(carouselData.order || 0));
-      formData.append('isActive', String(carouselData.isActive || false));
+      formData.append('is_active', carouselData.isActive ? 'true' : 'false');
+      console.log('FormData isActive value:', carouselData.isActive ? 'true' : 'false'); // Debug log
       formData.append('category', carouselData.category || '');
 
       // Handle image file
@@ -127,6 +143,7 @@ const CarouselManagement = () => {
 
       let response;
       try {
+        console.log('Sending request with isActive value:', carouselData.isActive); // Debug log
         if (currentCarousel) {
           // Update existing carousel
           const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
@@ -161,6 +178,8 @@ const CarouselManagement = () => {
       }
 
       const savedCarousel = await response.json();
+      console.log('Saved carousel:', savedCarousel); // Debug log
+      console.log('Saved carousel isActive:', savedCarousel.is_active !== undefined ? savedCarousel.is_active : savedCarousel.isActive, typeof (savedCarousel.is_active !== undefined ? savedCarousel.is_active : savedCarousel.isActive)); // Debug log
 
       if (currentCarousel) {
         // Update the carousel in the list
@@ -238,13 +257,19 @@ const CarouselManagement = () => {
                         <p className="font-medium text-black dark:text-white">{carousel.order}</p>
                       </td>
                       <td className="py-5 px-4">
-                        <span className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
-                          carousel.isActive
-                            ? 'bg-success bg-opacity-10 text-success dark:bg-opacity-20 dark:text-white'
-                            : 'bg-warning bg-opacity-10 text-warning dark:bg-opacity-20 dark:text-white'
-                        }`}>
-                          {carousel.isActive ? 'Active' : 'Inactive'}
-                        </span>
+                        {(() => {
+                          const isActive = normalizeIsActive(carousel.is_active !== undefined ? carousel.is_active : carousel.isActive);
+                          console.log(`Carousel ${carousel.id} isActive raw value:`, carousel.is_active !== undefined ? carousel.is_active : carousel.isActive, 'normalized:', isActive); // Debug log
+                          return (
+                            <span className={`inline-flex rounded-full py-1 px-3 text-sm font-medium ${
+                              isActive
+                                ? 'bg-success bg-opacity-10 text-success dark:bg-opacity-20 dark:text-white'
+                                : 'bg-warning bg-opacity-10 text-warning dark:bg-opacity-20 dark:text-white'
+                            }`}>
+                              {isActive ? 'Active' : 'Inactive'}
+                            </span>
+                          );
+                        })()}
                       </td>
                       <td className="py-5 px-4">
                         <div className="flex items-center space-x-2">

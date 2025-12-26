@@ -148,16 +148,16 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
   };
 
   return (
-    <div className="rounded-sm border border-black/50 dark:border-white/50 bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
-      <div className="border-b border-stroke py-4 px-6.5 dark:border-strokedark">
-        <h3 className="font-medium text-black dark:text-white">
+    <div className="rounded-xl border border-white/20 bg-white/5">
+      <div className="border-b border-white/20 py-4 px-6.5">
+        <h3 className="font-bold text-white/80">
           {isEditing ? 'Edit Product' : 'Add New Product'}
         </h3>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="p-6.5">
           <div className="mb-4.5">
-            <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+            <label className="mb-2.5 block text-sm font-medium text-white/80">
               Product Name
             </label>
             <input
@@ -165,13 +165,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+              className="w-full font-medium rounded-lg bg-white/5 border border-white/20 text-white/80 py-3 px-5 outline-0"
               required
             />
           </div>
 
           <div className="w-full mb-4.5">
-            <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+            <label className="mb-2.5 block text-sm font-bold text-white/80">
               Category
             </label>
             <input
@@ -179,13 +179,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="category"
               value={formData.category}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+              className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
             />
           </div>
 
           <div className="flex gap-4 mb-4.5">
             <div className="w-1/2">
-              <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+              <label className="mb-2.5 font-bold block text-sm text-white/80">
                 Price ($)
               </label>
               <input
@@ -193,13 +193,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
                 name="price"
                 value={formData.price}
                 onChange={handleChange}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
-                step="0.01"
+                className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
+                step="1"
                 required
               />
             </div>
             <div className="w-1/2">
-              <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+              <label className="mb-2.5 block text-sm font-bold text-white/80">
                 Stock
               </label>
               <input
@@ -207,14 +207,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
                 name="stock"
                 value={formData.stock}
                 onChange={handleChange}
-                className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+                className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
                 required
               />
             </div>
           </div>
 
           <div className="mb-4.5">
-            <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+            <label className="mb-2.5 block text-sm font-bold text-black dark:text-white">
               Store
             </label>
             <input
@@ -222,13 +222,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               name="store"
               value={formData.store}
               onChange={handleChange}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+              className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
               required
             />
           </div>
 
           <div className="mb-4.5">
-            <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+            <label className="mb-2.5 block text-sm font-bold text-white/80">
               Product Image
             </label>
             <div className="flex items-center gap-4">
@@ -237,9 +237,9 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
                   type="file"
                   accept="image/*"
                   onChange={handleImageChange}
-                  className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+                  className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
                 />
-                <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                <p className="mt-1 text-xs text-white/60">
                   Image will be automatically converted to AVIF format
                 </p>
               </div>
@@ -256,7 +256,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
           </div>
 
           <div className="mb-4.5">
-            <label className="mb-2.5 block text-sm font-medium text-black dark:text-white">
+            <label className="mb-2.5 block text-sm font-bold text-white/80">
               Description
             </label>
             <textarea
@@ -264,21 +264,21 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSave, onCancel }) 
               value={formData.description || ''}
               onChange={handleChange}
               rows={4}
-              className="w-full rounded border-[1.5px] border-stroke bg-transparent py-3 px-5 text-black placeholder:text-black placeholder:opacity-40 focus:border-primary focus:outline-none active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-formstroke dark:bg-form-input dark:text-white dark:placeholder:text-white dark:placeholder:opacity-50"
+              className="w-full font-medium rounded-lg text-white/80 border border-white/20 outline-none bg-white/5 py-3 px-5"
             ></textarea>
           </div>
 
           <div className="flex justify-end gap-4.5">
             <button
               type="button"
-              className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:bg-gray-100 hover:shadow-1 dark:border-strokedark dark:text-white dark:hover:bg-meta-4"
+              className="flex justify-center rounded-lg border border-white/20 bg-white/5 py-2 px-6 font-bold text-white/80 hover:bg-white/10 transition"
               onClick={onCancel}
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-white hover:bg-opacity-90"
+              className="flex justify-center rounded-lg border border-white/20 bg-white/5 py-2 px-6 font-bold text-white/80 hover:bg-white/10 "
             >
               {isEditing ? 'Update Product' : 'Add Product'}
             </button>

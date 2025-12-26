@@ -206,29 +206,29 @@ const ProductManagement = () => {
           </div>
           <button
             onClick={handleAddProduct}
-            className="bg-primary hover:bg-opacity-90 rounded-lg px-4 py-2 text-white flex items-center justify-center"
+            className="font-bold bg-white/5 rounded-lg px-4 py-2 text-white/80 border border-white/20 hover:bg-white/10 transition flex items-center justify-center"
           >
             <span className="mr-2">+</span> Add Product
           </button>
         </div>
 
         {!showForm ? (
-          <div className="rounded-sm border border-stroke bg-white dark:bg-black shadow-default dark:border-strokedark dark:bg-boxdark">
+          <div className="rounded-xl border border-white/20 bg-white/5">
             <div className="max-w-full overflow-x-auto">
               <table className="w-full table-auto">
                 <thead>
                   <tr className="bg-gray-2 text-left dark:bg-meta-4">
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Product</th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Price</th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Category</th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Stock</th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Store</th>
-                    <th className="py-4 px-4 font-medium text-black dark:text-white">Actions</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Product</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Price</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Category</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Stock</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Store</th>
+                    <th className="py-4 px-4 font-medium text-white/80">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {products && products.map((product) => (
-                    <tr key={product.id} className="border-b border-[#eee] dark:border-strokedark">
+                    <tr key={product.id} className="border-t border-white/20">
                       <td className="py-5 px-4">
                         <div className="flex items-center">
                           <div className="h-16 w-16 rounded-md">
@@ -268,13 +268,13 @@ const ProductManagement = () => {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditProduct(product)}
-                            className="flex items-center justify-center text-sm font-medium rounded bg-blue-500 text-white hover:bg-blue-600 py-2 px-3.5"
+                            className="flex items-center justify-center text-sm font-medium rounded-full bg-blue-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(59,130,246,0.8)] hover:text-shadow-[0_0_12px_rgba(59,130,246,1)] transition-all"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteProduct(product.id)}
-                            className="flex items-center justify-center text-sm font-medium rounded bg-red-500 text-white hover:bg-red-600 py-2 px-3.5"
+                            className="flex items-center justify-center text-sm font-medium rounded-full bg-red-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(239,68,68,0.8)] hover:text-shadow-[0_0_12px_rgba(239,68,68,1)] transition-all"
                           >
                             Delete
                           </button>

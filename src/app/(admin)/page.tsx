@@ -21,6 +21,22 @@ interface CarouselItem {
   isActive: boolean;
 }
 
+// Helper function to get proper image URL
+const getImageUrl = (imagePath: string) => {
+  if (!imagePath) return '';
+
+  // If it's already a full URL, return as is
+  if (imagePath.startsWith('http')) {
+    return imagePath;
+  }
+
+  // Remove any 'uploads/' prefix to avoid double path
+  const cleanPath = imagePath.replace(/^uploads\//, '');
+
+  // Return full URL with API base
+  return `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${cleanPath}`;
+};
+
 export default function Ecommerce() {
   const [products, setProducts] = useState<Product[]>([]);
   const [carousels, setCarousels] = useState<CarouselItem[]>([]);
@@ -166,20 +182,11 @@ export default function Ecommerce() {
                   <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
                     <div className="shrink-0 w-16 h-16 border bg-white/5 border-white/20 rounded-lg p-1 overflow-hidden">
                       {product.image ? (
-                        // Check if the image is already a full URL
-                        product.image.startsWith('http') ? (
-                          <img
-                            src={product.image}
-                            alt={product.name}
-                            className="w-full h-full object-cover rounded-md"
-                          />
-                        ) : (
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${product.image}`}
-                            alt={product.name}
-                            className="w-full h-full object-cover"
-                          />
-                        )
+                        <img
+                          src={getImageUrl(product.image)}
+                          alt={product.name}
+                          className="w-full h-full object-cover rounded-md"
+                        />
                       ) : (
                         <div className="w-full h-full bg-wwhite/80 flex items-center justify-center">
                           <FaBox className="text-white/80" />
@@ -225,20 +232,11 @@ export default function Ecommerce() {
                   <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
                     <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
                       {carousel.image ? (
-                        // Check if the image is already a full URL
-                        carousel.image.startsWith('http') ? (
-                          <img
-                            src={carousel.image}
-                            alt={carousel.title}
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${carousel.image}`}
-                            alt={carousel.title}
-                            className="w-full h-full object-cover rounded-md"
-                          />
-                        )
+                        <img
+                          src={getImageUrl(carousel.image)}
+                          alt={carousel.title}
+                          className="w-full h-full object-cover rounded-md"
+                        />
                       ) : (
                         <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
                           <FaImages className="text-gray-400" />

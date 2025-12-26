@@ -44,7 +44,7 @@ const AppHeader: React.FC = () => {
       <div className="flex flex-col items-center justify-between grow lg:flex-row lg:px-6">
         <div className="flex items-center justify-between w-full gap-2 px-3 py-3 sm:gap-4 lg:justify-normal lg:px-0 lg:py-4">
           <button
-              className="items-center justify-center w-10 h-10 rounded-xl z-99999 lg:flex lg:h-11 lg:w-11 lg:border bg-white/5 border border-white/20 text-white/80"
+              className="items-center justify-center w-10 h-10 rounded-xl z-99999 lg:flex lg:h-11 lg:w-11 lg:border bg-white/5 border border-white/20 text-white/80 "
             onClick={handleToggle}
             aria-label="Toggle Sidebar"
           >

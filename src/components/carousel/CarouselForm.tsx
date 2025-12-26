@@ -12,20 +12,6 @@ interface CarouselFormProps {
 const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel }) => {
   const isEditing = !!carousel;
 
-  const [formData, setFormData] = useState<Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'> | Partial<CarouselItem>>({
-    title: carousel?.title || '',
-    description: carousel?.description || '',
-    link: carousel?.link || '',
-    order: carousel?.order || 0,
-    isActive: carousel?.isActive || false,
-    category: carousel?.category || '',
-  });
-
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(
-    carousel?.image ? formatImageUrl(carousel.image) : null
-  );
-
   // Helper function to format image URLs
   const formatImageUrl = (imagePath: string): string => {
     if (!imagePath) return '';
@@ -42,6 +28,20 @@ const CarouselForm: React.FC<CarouselFormProps> = ({ carousel, onSave, onCancel 
     const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080';
     return `${baseUrl}/uploads/${cleanPath}`;
   };
+
+  const [formData, setFormData] = useState<Omit<CarouselItem, 'id' | 'createdAt' | 'updatedAt'> | Partial<CarouselItem>>({
+    title: carousel?.title || '',
+    description: carousel?.description || '',
+    link: carousel?.link || '',
+    order: carousel?.order || 0,
+    isActive: carousel?.isActive || false,
+    category: carousel?.category || '',
+  });
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    carousel?.image ? formatImageUrl(carousel.image) : null
+  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;

@@ -268,13 +268,13 @@ const ProductManagement = () => {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEditProduct(product)}
-                            className="flex items-center justify-center text-sm font-medium rounded-full bg-blue-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(59,130,246,0.8)] hover:text-shadow-[0_0_12px_rgba(59,130,246,1)] transition-all"
+                            className="flex items-center justify-center text-sm font-medium rounded-full bg-blue-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(59,130,246,0.8)] hover:text-shadow-[0_0_24px_rgba(59,130,246,1)] hover:text-blue-400 transition-all"
                           >
                             Edit
                           </button>
                           <button
                             onClick={() => handleDeleteProduct(product.id)}
-                            className="flex items-center justify-center text-sm font-medium rounded-full bg-red-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(239,68,68,0.8)] hover:text-shadow-[0_0_12px_rgba(239,68,68,1)] transition-all"
+                            className="flex items-center justify-center text-sm font-medium rounded-full bg-red-500/10 text-white py-2 px-3.5 text-shadow-[0_0_5px_rgba(239,68,68,0.8)] hover:text-shadow-[0_0_24px_rgba(255,100,100,1)] hover:text-red-400 transition-all"
                           >
                             Delete
                           </button>

@@ -160,53 +160,55 @@ export default function Ecommerce() {
               <a href="/products" className="border border-white/20 bg-white/5 rounded-full py-2 px-4 text-sm text-blue-500 hover:bg-blue-900/50 transition">View All</a>
             </div>
 
-            <div className="border border-white/20 rounded-xl  bg-white/5">
-              {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
-                  <div className="shrink-0 w-16 h-16 border bg-white/5 border-white/20 rounded-lg p-1 overflow-hidden">
-                    {product.image ? (
-                      // Check if the image is already a full URL
-                      product.image.startsWith('http') ? (
-                        <img
-                          src={product.image}
-                          alt={product.name}
-                          className="w-full h-full object-cover rounded-md"
-                        />
+            <div className="border border-white/20 rounded-xl bg-white/5 h-72 flex flex-col">
+              <div className="overflow-y-auto custom-scrollbar flex-grow">
+                {products.map((product) => (
+                  <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                    <div className="shrink-0 w-16 h-16 border bg-white/5 border-white/20 rounded-lg p-1 overflow-hidden">
+                      {product.image ? (
+                        // Check if the image is already a full URL
+                        product.image.startsWith('http') ? (
+                          <img
+                            src={product.image}
+                            alt={product.name}
+                            className="w-full h-full object-cover rounded-md"
+                          />
+                        ) : (
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${product.image}`}
+                            alt={product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        )
                       ) : (
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${product.image}`}
-                          alt={product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      )
-                    ) : (
-                      <div className="w-full h-full bg-wwhite/80 flex items-center justify-center">
-                        <FaBox className="text-white/80" />
+                        <div className="w-full h-full bg-wwhite/80 flex items-center justify-center">
+                          <FaBox className="text-white/80" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-white/80 truncate">{product.name}</h4>
+                      <p className="text-sm text-white/50">${product.price.toFixed(2)}</p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className={`text-xs px-2 py-1 rounded-full ${
+                          product.stock > 10
+                            ? 'bg-gray-700 text-gray-200 dark:bg-gray-700/30 dark:text-gray-300'
+                            : 'bg-gray-900 text-gray-400 dark:bg-gray-900/30 dark:text-gray-500'
+                        }`}>
+                          {product.stock} in stock
+                        </span>
+                        <span className="text-xs text-white/60">{product.category}</span>
                       </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-white/80 truncate">{product.name}</h4>
-                    <p className="text-sm text-white/50">${product.price.toFixed(2)}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        product.stock > 10
-                          ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400'
-                          : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400'
-                      }`}>
-                        {product.stock} in stock
-                      </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">{product.category}</span>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {products.length === 0 && (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No products found. <a href="/products" className="text-blue-500 hover:underline">Add your first product</a>
-                </div>
-              )}
+                {products.length === 0 && (
+                  <div className="text-center py-8 text-white/60">
+                    No products found. <a href="/products" className="text-blue-500 hover:underline">Add your first product</a>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
@@ -217,52 +219,54 @@ export default function Ecommerce() {
               <a href="/carousel" className="text-sm text-blue-500 hover:bg-blue-900/50 transition-all border border-white/20 bg-white/5 rounded-full py-2 px-4">View All</a>
             </div>
 
-            <div className=" bg-white/5 rounded-lg border border-white/20">
-              {carousels.slice(0, 5).map((carousel) => (
-                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
-                  <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
-                    {carousel.image ? (
-                      // Check if the image is already a full URL
-                      carousel.image.startsWith('http') ? (
-                        <img
-                          src={carousel.image}
-                          alt={carousel.title}
-                          className="w-full h-full object-cover"
-                        />
+            <div className="bg-white/5 rounded-lg border border-white/20 h-72 flex flex-col">
+              <div className="overflow-y-auto custom-scrollbar flex-grow">
+                {carousels.filter(c => c.isActive).map((carousel) => (
+                  <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                    <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
+                      {carousel.image ? (
+                        // Check if the image is already a full URL
+                        carousel.image.startsWith('http') ? (
+                          <img
+                            src={carousel.image}
+                            alt={carousel.title}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${carousel.image}`}
+                            alt={carousel.title}
+                            className="w-full h-full object-cover rounded-md"
+                          />
+                        )
                       ) : (
-                        <img
-                          src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${carousel.image}`}
-                          alt={carousel.title}
-                          className="w-full h-full object-cover rounded-md"
-                        />
-                      )
-                    ) : (
-                      <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                        <FaImages className="text-gray-400" />
+                        <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
+                          <FaImages className="text-gray-400" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
+                      <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
+                      <div className="mt-1">
+                        <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full border border-white/20 bg-white/5 ${
+                          carousel.isActive
+                            ? 'bg-gray-700 text-gray-200 dark:bg-gray-700/30 dark:text-gray-300'
+                            : 'bg-gray-900 text-gray-400 dark:bg-gray-900/30 dark:text-gray-500'
+                        }`}>
+                          {carousel.isActive ? 'Active' : 'Inactive'}
+                        </span>
                       </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
-                    <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
-                    <div className="mt-1">
-                      <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full border border-white/20 bg-white/5 ${
-                        carousel.isActive
-                          ? 'text-green-500/80 bg-green-800/50'
-                          : 'text-white/80'
-                      }`}>
-                        {carousel.isActive ? 'Active' : 'Inactive'}
-                      </span>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
 
-              {carousels.length === 0 && (
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No carousels found. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
-                </div>
-              )}
+                {carousels.filter(c => c.isActive).length === 0 && (
+                  <div className="text-center py-8 text-white/60">
+                    No active carousels. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>

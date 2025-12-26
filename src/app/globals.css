@@ -181,23 +181,38 @@
 
 @utility custom-scrollbar {
   &::-webkit-scrollbar {
-    @apply size-1.5;
+    width: 14px;
+    height: 14px;
   }
 
   &::-webkit-scrollbar-track {
-    @apply rounded-full;
+    background: #1a1a1a;
+    border-radius: 7px;
   }
 
   &::-webkit-scrollbar-thumb {
-    @apply bg-gray-200 rounded-full dark:bg-gray-700;
+    background: #555555;
+    border-radius: 7px;
+    border: 3px solid #1a1a1a;
+    transition: background 0.2s ease;
   }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #777777;
+  }
+
+  /* For Firefox - using 'auto' for more visible scrollbar */
+  scrollbar-width: auto;
+  scrollbar-color: #555555 #1a1a1a;
 }
 
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
-  background-color: #303030;
+  background: #555555;
 }
 
-
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #777777;
+}
 
 @layer utilities {
   /* For Remove Date Icon */

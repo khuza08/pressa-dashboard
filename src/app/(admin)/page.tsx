@@ -225,10 +225,10 @@ export default function Ecommerce() {
             <div className="flex items-center mb-6">
               <h3 className="font-bold text-lg text-white/80 bg-white/5 border border-white/20 rounded-full py-2 px-4">Carousels</h3>
               <div className="flex-1 flex justify-center">
-                <div className="flex rounded-full border border-white/20 overflow-hidden">
+                <div className="flex rounded-full border border-white/20 overflow-hidden h-8">
                   <button
                     onClick={() => setCarouselView('active')}
-                    className={`px-4 py-2 text-sm ${
+                    className={`px-4 py-2 text-md font-bold h-full flex items-center justify-center ${
                       carouselView === 'active'
                         ? 'bg-white/10 text-white'
                         : 'bg-white/5 text-white/60 hover:bg-white/10'
@@ -238,7 +238,7 @@ export default function Ecommerce() {
                   </button>
                   <button
                     onClick={() => setCarouselView('inactive')}
-                    className={`px-4 py-2 text-sm ${
+                    className={`px-4 py-2 text-md font-bold h-full flex items-center justify-center ${
                       carouselView === 'inactive'
                         ? 'bg-white/10 text-white'
                         : 'bg-white/5 text-white/60 hover:bg-white/10'

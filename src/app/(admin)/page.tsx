@@ -89,19 +89,19 @@ export default function Ecommerce() {
       <div className="space-y-6">
         {/* Dashboard Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-white dark:text-white">Dashboard Overview</h1>
-          <p className="text-sm text-gray-400 dark:text-gray-400">Welcome back! Here's what's happening with your store today.</p>
+          <h1 className="text-2xl font-bold text-white/80">Dashboard Overview</h1>
+          <p className="text-sm text-white/60">Welcome back! Here's what's happening with your store today.</p>
         </div>
 
         {/* Metrics Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
           {/* Total Products Card */}
-          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
-            <div className="flex items-center justify-center w-12 h-12 bg-blue-900/30 rounded-xl dark:bg-blue-900/30">
-              <FaBox className="text-blue-400 dark:text-blue-400 text-xl" />
+          <div className="rounded-2xl border border-white/20 bg-white/5 p-5">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg  bg-blue-400/20 border border-white/20 )]">
+              <FaBox className="text-blue-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-400 dark:text-gray-400">Total Products</span>
+              <span className="text-sm text-white/80">Total Products</span>
               <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {totalProducts}
               </h4>
@@ -109,12 +109,12 @@ export default function Ecommerce() {
           </div>
 
           {/* Active Carousels Card */}
-          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
-            <div className="flex items-center justify-center w-12 h-12 bg-green-900/30 rounded-xl dark:bg-green-900/30">
-              <FaImages className="text-green-400 dark:text-green-400 text-xl" />
+          <div className="rounded-2xl border border-white/20 bg-white/5 p-5">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-green-900/30 border border-white/20">
+              <FaImages className="text-green-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-400 dark:text-gray-400">Active Carousels</span>
+              <span className="text-sm text-white/80">Active Carousels</span>
               <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {activeCarousels}
               </h4>
@@ -122,12 +122,12 @@ export default function Ecommerce() {
           </div>
 
           {/* Low Stock Products Card */}
-          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
-            <div className="flex items-center justify-center w-12 h-12 bg-yellow-900/30 rounded-xl dark:bg-yellow-900/30">
-              <FaBox className="text-yellow-400 dark:text-yellow-400 text-xl" />
+          <div className="rounded-2xl border border-white/20 bg-white/5 p-5">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-yellow-900/30 border border-white/20">
+              <FaBox className="text-yellow-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-400 dark:text-gray-400">Low Stock Items</span>
+              <span className="text-sm text-white/80">Low Stock Items</span>
               <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {lowStockProducts}
               </h4>
@@ -135,12 +135,12 @@ export default function Ecommerce() {
           </div>
 
           {/* Total Carousels Card */}
-          <div className="rounded-2xl border border-gray-800 bg-black p-5 dark:border-gray-800 dark:bg-black">
-            <div className="flex items-center justify-center w-12 h-12 bg-purple-900/30 rounded-xl dark:bg-purple-900/30">
-              <FaImages className="text-purple-400 dark:text-purple-400 text-xl" />
+          <div className="rounded-2xl border border-white/20 bg-white/5 p-5">
+            <div className="flex items-center justify-center w-12 h-12 rounded-lg bg-purple-900/30 border border-white/20">
+              <FaImages className="text-purple-400 text-xl" />
             </div>
             <div className="mt-5">
-              <span className="text-sm text-gray-400 dark:text-gray-400">Total Carousels</span>
+              <span className="text-sm text-white/80">Total Carousels</span>
               <h4 className="mt-2 font-bold text-white text-title-sm dark:text-white/90">
                 {totalCarousels}
               </h4>
@@ -151,23 +151,23 @@ export default function Ecommerce() {
         {/* Products and Carousels Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Recent Products */}
-          <div className="bg-black rounded-2xl border border-gray-800 p-6">
+          <div className="rounded-2xl bg-white/6 border border-white/20 p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg text-gray-800 dark:text-white">Recent Products</h3>
-              <a href="/products" className="text-sm text-blue-500 hover:underline">View All</a>
+              <h3 className="font-bold text-lg text-white/80 bg-white/5 rounded-full py-2 px-4 border border-white/20">Recent Products</h3>
+              <a href="/products" className="border border-white/20 bg-white/5 rounded-full py-2 px-4 text-sm text-blue-500 hover:bg-blue-900/50 transition">View All</a>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 border border-white/20 rounded-xl  bg-white/5">
               {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800">
-                  <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
+                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-all">
+                  <div className="shrink-0 w-16 h-16 border border-white/20 rounded-lg p-1 overflow-hidden">
                     {product.image ? (
                       // Check if the image is already a full URL
                       product.image.startsWith('http') ? (
                         <img
                           src={product.image}
                           alt={product.name}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-md"
                         />
                       ) : (
                         <img
@@ -177,14 +177,14 @@ export default function Ecommerce() {
                         />
                       )
                     ) : (
-                      <div className="w-full h-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center">
-                        <FaBox className="text-gray-400" />
+                      <div className="w-full h-full bg-wwhite/80 flex items-center justify-center">
+                        <FaBox className="text-white/80" />
                       </div>
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-800 dark:text-white truncate">{product.name}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">${product.price.toFixed(2)}</p>
+                    <h4 className="font-medium text-white/80 truncate">{product.name}</h4>
+                    <p className="text-sm text-white/50">${product.price.toFixed(2)}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <span className={`text-xs px-2 py-1 rounded-full ${
                         product.stock > 10
@@ -208,16 +208,16 @@ export default function Ecommerce() {
           </div>
 
           {/* Active Carousels */}
-          <div className="bg-black rounded-2xl border border-gray-800 p-6">
+          <div className="rounded-2xl border border-white/20 bg-white/5 p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg text-gray-800 dark:text-white">Active Carousels</h3>
+              <h3 className="font-bold text-lg text-white/80">Active Carousels</h3>
               <a href="/carousel" className="text-sm text-blue-500 hover:underline">View All</a>
             </div>
 
             <div className="space-y-4">
               {carousels.filter(c => c.isActive).slice(0, 5).map((carousel) => (
-                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-800">
-                  <div className="flex-shrink-0 w-16 h-16 rounded-md overflow-hidden">
+                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 border border-white/20">
+                  <div className="shrink-0 w-16 h-16 rounded-md overflow-hidden">
                     {carousel.image ? (
                       // Check if the image is already a full URL
                       carousel.image.startsWith('http') ? (

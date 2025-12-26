@@ -10,13 +10,13 @@ type UserInfoCardProps = {
 export default function UserInfoCard({ name = 'Admin User', email = 'admin@example.com', role = 'admin' }: UserInfoCardProps) {
   // We no longer need modal functionality since edit button is removed
   return (
-    <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+    <div className="p-5 border border-white/20 bg-white/5 rounded-2xl lg:p-6">
       <div>
-        <h4 className="text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-6">
+        <h4 className="text-lg font-semibold bg-white/5 rounded-xl text-white/80 border border-white/20 w-fit py-2 px-4 lg:mb-6">
           Personal Information
         </h4>
 
-        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-7 2xl:gap-x-32 border border-white/20 rounded-xl bg-white/5 p-4">
           <div>
             <p className="mb-2 text-xs leading-normal text-gray-500 dark:text-gray-400">
               Full Name

@@ -14,11 +14,11 @@ type UserMetaCardProps = {
   avatar?: string;
 };
 
-export default function UserMetaCard({ name = 'Admin User', email = 'admin@example.com', avatar = '/images/user/default-avatar.png' }: UserMetaCardProps) {
+export default function UserMetaCard({ name = 'Admin', email = 'admin@example.com', avatar = '/images/user/default-avatar.png' }: UserMetaCardProps) {
   // We no longer need modal functionality since edit button is removed
   return (
     <>
-      <div className="p-5 border border-gray-200 rounded-2xl dark:border-gray-800 lg:p-6">
+      <div className="p-5 border border-white/20 bg-white/5 rounded-2xl lg:p-6">
         <div className="flex flex-col gap-5 xl:flex-row xl:items-center xl:justify-between">
           <div className="flex flex-col items-center w-full gap-6 xl:flex-row">
             <div className="w-20 h-20 overflow-hidden border border-gray-200 rounded-full dark:border-gray-800">

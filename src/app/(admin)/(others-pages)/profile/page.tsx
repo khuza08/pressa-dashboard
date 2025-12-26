@@ -19,11 +19,11 @@ function ProfileContent() {
 
   return (
     <div>
-      <div className="rounded-2xl border border-gray-200 bg-white p-5 dark:border-gray-800 dark:bg-white/[0.03] lg:p-6">
-        <h3 className="mb-5 text-lg font-semibold text-gray-800 dark:text-white/90 lg:mb-7">
+      <div className="rounded-4xl border border-white/20 bg-white/5 p-5 lg:p-6">
+        <h3 className="mb-5 text-lg font-bold text-white/80 py-2 px-6 w-fit bg-white/5 border border-white/20 rounded-2xl lg:mb-4">
           Profile
         </h3>
-        <div className="space-y-6">
+        <div className="space-y-4">
           <UserMetaCard
             name={user?.name || 'Admin User'}
             email={user?.email || 'admin@example.com'}

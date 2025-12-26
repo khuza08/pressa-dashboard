@@ -35,16 +35,15 @@ export default function UserDropdown() {
     <div className="relative">
       <button
         onClick={toggleDropdown}
-        className="flex items-center text-gray-700 dark:text-gray-400 dropdown-toggle"
-      >
-        <span className="mr-3 flex items-center justify-center rounded-full h-11 w-11 bg-gray-200 dark:bg-gray-700">
-          <FaUserTie className="text-gray-600 dark:text-gray-300 text-lg" />
+        className="flex items-center bg-white/5 text-white/80 rounded-full border border-white/20 py-2 px-4">
+        <span className="mr-4 flex items-center justify-center rounded-full h-7 w-7">
+          <FaUserTie className="text-white/80 text-lg" />
         </span>
 
         <span className="block mr-1 font-medium text-theme-sm">{displayName}</span>
 
         <svg
-          className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
+          className={`transition-all duration-300 ${
             isOpen ? "rotate-180" : ""
           }`}
           width="18"
@@ -66,7 +65,7 @@ export default function UserDropdown() {
       <Dropdown
         isOpen={isOpen}
         onClose={closeDropdown}
-        className="absolute right-0 mt-[17px] flex w-[260px] flex-col rounded-2xl border border-gray-200 bg-white p-3 shadow-theme-lg dark:border-gray-800 dark:bg-gray-dark"
+        className="absolute right-0 mt-8 flex w-64 flex-col p-3"
       >
         <div>
           <span className="block font-medium text-gray-700 text-theme-sm dark:text-gray-400">
@@ -158,7 +157,7 @@ export default function UserDropdown() {
         {/* Logout option */}
         <button
           onClick={handleLogout}
-          className="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-red-600 rounded-lg group text-theme-sm hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+          className="flex items-center w-full gap-3 px-3 py-2 mt-3 font-medium text-white rounded-lg group text-theme-sm hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
         >
           <svg
             className="fill-red-500 dark:fill-red-400"

@@ -57,9 +57,12 @@ export default function Ecommerce() {
         if (carouselsResponse.ok) {
           const carouselsData = await carouselsResponse.json();
           const carouselsList = Array.isArray(carouselsData) ? carouselsData : carouselsData.data || [];
+          console.log('Fetched carousels:', carouselsList); // Debug log
           setCarousels(carouselsList);
           setTotalCarousels(carouselsList.length);
-          setActiveCarousels(carouselsList.filter(c => c.isActive).length);
+          const activeCount = carouselsList.filter(c => c.isActive).length;
+          console.log('Active carousel count:', activeCount); // Debug log
+          setActiveCarousels(activeCount);
         }
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
@@ -157,10 +160,10 @@ export default function Ecommerce() {
               <a href="/products" className="border border-white/20 bg-white/5 rounded-full py-2 px-4 text-sm text-blue-500 hover:bg-blue-900/50 transition">View All</a>
             </div>
 
-            <div className="space-y-4 border border-white/20 rounded-xl  bg-white/5">
+            <div className="border border-white/20 rounded-xl  bg-white/5">
               {products.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 transition-all">
-                  <div className="shrink-0 w-16 h-16 border border-white/20 rounded-lg p-1 overflow-hidden">
+                <div key={product.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                  <div className="shrink-0 w-16 h-16 border bg-white/5 border-white/20 rounded-lg p-1 overflow-hidden">
                     {product.image ? (
                       // Check if the image is already a full URL
                       product.image.startsWith('http') ? (
@@ -210,14 +213,14 @@ export default function Ecommerce() {
           {/* Active Carousels */}
           <div className="rounded-2xl border border-white/20 bg-white/5 p-6">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-bold text-lg text-white/80">Active Carousels</h3>
-              <a href="/carousel" className="text-sm text-blue-500 hover:underline">View All</a>
+              <h3 className="font-bold text-lg text-white/80 bg-white/5 border border-white/20 rounded-full py-2 px-4">Active Carousels</h3>
+              <a href="/carousel" className="text-sm text-blue-500 hover:bg-blue-900/50 transition-all border border-white/20 bg-white/5 rounded-full py-2 px-4">View All</a>
             </div>
 
-            <div className="space-y-4">
-              {carousels.filter(c => c.isActive).slice(0, 5).map((carousel) => (
-                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/5 border border-white/20">
-                  <div className="shrink-0 w-16 h-16 rounded-md overflow-hidden">
+            <div className=" bg-white/5 rounded-lg border border-white/20">
+              {carousels.slice(0, 5).map((carousel) => (
+                <div key={carousel.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-white/10 transition-all">
+                  <div className="shrink-0 w-16 h-16 overflow-hidden p-1 bg-white/5 rounded-lg border border-white/20">
                     {carousel.image ? (
                       // Check if the image is already a full URL
                       carousel.image.startsWith('http') ? (
@@ -230,7 +233,7 @@ export default function Ecommerce() {
                         <img
                           src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/uploads/${carousel.image}`}
                           alt={carousel.title}
-                          className="w-full h-full object-cover"
+                          className="w-full h-full object-cover rounded-md"
                         />
                       )
                     ) : (
@@ -240,20 +243,24 @@ export default function Ecommerce() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-gray-800 dark:text-white truncate">{carousel.title}</h4>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 line-clamp-1">{carousel.description}</p>
+                    <h4 className="font-medium text-white/80 truncate">{carousel.title}</h4>
+                    <p className="text-sm text-white/60 line-clamp-1">{carousel.description}</p>
                     <div className="mt-1">
-                      <span className="inline-flex items-center text-xs px-2 py-1 rounded-full bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
-                        Active
+                      <span className={`inline-flex items-center text-xs px-2 py-1 rounded-full border border-white/20 bg-white/5 ${
+                        carousel.isActive
+                          ? 'text-green-500/80 bg-green-800/50'
+                          : 'text-white/80'
+                      }`}>
+                        {carousel.isActive ? 'Active' : 'Inactive'}
                       </span>
                     </div>
                   </div>
                 </div>
               ))}
 
-              {carousels.filter(c => c.isActive).length === 0 && (
+              {carousels.length === 0 && (
                 <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  No active carousels. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
+                  No carousels found. <a href="/carousel" className="text-blue-500 hover:underline">Create a new carousel</a>
                 </div>
               )}
             </div>
